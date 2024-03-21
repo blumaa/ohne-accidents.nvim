@@ -8,7 +8,10 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lazy
   {
-    'blumaa/ohne-accidents.nvim',
+    'blumaa/ohne-accidents',
+    config = function()
+      require("ohne-accidents").init()
+    end
   },
 
 ```
