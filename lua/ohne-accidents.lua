@@ -26,7 +26,7 @@ function M.displayWelcomeMessage()
 end
 
 -- Initialization function
-function M.init()
+function M.setup()
     M.displayWelcomeMessage()
 end
 
