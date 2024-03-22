@@ -4,7 +4,7 @@
 local script_dir = debug.getinfo(1, 'S').source:match("@(.*/)")
 -- Add the parent directory to package.path
 package.path = package.path .. ";" .. script_dir .. "../?.lua"
--- Now you can require the module by name
+-- Now require the module by name
 local ohne_accidents = require 'ohne-accidents'
 
 describe('ohne-accidents', function()
@@ -13,8 +13,9 @@ describe('ohne-accidents', function()
       expand = function() return "/home/user/.config/nvim" end,
       split = function() return { "file1.lua", "file2.lua" } end,
       glob = function() return "file1.lua\nfile2.lua" end,
-      getftime = function() return 1628000000 end,       -- Mocked file modification time
+      getftime = function() return 1628000000 end, -- Mocked file modification time
       floor = function(x) return math.floor(x) end,
+      stdpath = function() return "/home/user/.config/nvim" end, -- Mocked stdpath function
     },
     api = {
       nvim_echo = function() end,
@@ -40,7 +41,7 @@ describe('ohne-accidents', function()
     ohne_accidents.displayWelcomeMessage()
 
     assert.spy(nvim_echo_spy).was.called_with(
-    { { "╔════╗\n║  0 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
+      { { "╔════╗\n║  0 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
   end)
 
   it('displays welcome message with 33 days', function()
@@ -53,8 +54,21 @@ describe('ohne-accidents', function()
     ohne_accidents.displayWelcomeMessage()
 
     assert.spy(nvim_echo_spy).was.called_with(
-    { { "╔════╗\n║ 33 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
+      { { "╔════╗\n║ 33 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
+  end)
+
+  it('displays detailed message', function()
+    -- Adjust os.time to return a value that is 33 days, 7 hours, 46 minutes, and 40 seconds later than getftime
+    os.time = function() return 1628000000 + 33 * 86400 + 7 * 3600 + 46 * 60 + 40 end
+
+    local spy = require('luassert.spy')
+    local nvim_echo_spy = spy.on(vim.api, 'nvim_echo')
+
+    ohne_accidents.displayDetailedMessage()
+
+    assert.spy(nvim_echo_spy).was.called_with(
+      { { "╔════╗\n║ 33 ║ Days\n║  7 ║ Hours\n║ 46 ║ Minutes\n║ 40 ║ Seconds\n╚════╝ Without Editing the Configuration", "Title" } },
+      true, {})
   end)
 end)
-
 
