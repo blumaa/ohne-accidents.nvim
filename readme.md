@@ -12,7 +12,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
   {
     'blumaa/ohne-accidents',
     config = function()
-      require("ohne-accidents").init()
+      require("ohne-accidents").setup()
     end
   },
 
