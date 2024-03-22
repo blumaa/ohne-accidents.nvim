@@ -18,3 +18,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```
 
+### Alternatives
+
+- [ConfigPulse](https://github.com/mrquantumcodes/configpulse)
+- [NvimDaysWithout](https://github.com/idanarye/nvim-days-without)
