@@ -2,6 +2,19 @@
 
 local M = {}
 
+M.config = {
+    displayWelcomeMessage = false
+}
+
+-- Function to set configuration options
+function M.setConfig(opts)
+    for k, v in pairs(opts) do
+        if M.config[k] ~= nil then
+            M.config[k] = v
+        end
+    end
+end
+
 -- Function to calculate the time since last modification of any config file
 local function timeSinceLastChange()
     -- local config_dir = vim.fn.expand("~/.config/nvim")
@@ -27,6 +40,10 @@ end
 
 -- Function to display the message on the welcome screen
 function M.displayWelcomeMessage()
+    if not M.config.displayWelcomeMessage then
+        return
+    end
+
     local days = timeSinceLastChange()
     local message = string.format("╔════╗\n║ %2d ║ Days Without Editing the Configuration\n╚════╝", days)
     vim.api.nvim_echo({{message, "Title"}}, true, {})
@@ -46,7 +63,11 @@ function M.handleCommand(arg)
 end
 
 -- Initialization function
-function M.setup()
+function M.setup(opts)
+    if opts then
+        M.setConfig(opts)
+    end
+
     M.displayWelcomeMessage()
 
     vim.api.nvim_command('command! -nargs=1 OhneAccidents lua require("ohne-accidents").handleCommand(<f-args>)')
