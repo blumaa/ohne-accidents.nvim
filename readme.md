@@ -19,6 +19,14 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```
 
+### Configuration
+
+The welcome message is set to display by default when you start nvim. You can turn this off by setting it to false.
+
+```
+  require("ohne-accidents").setup({ welcomeOnStartup = false })
+```
+
 ### Detailed Display Message
 
 ![exampe of detailed display message](images/detailedDisplayMessage.png)

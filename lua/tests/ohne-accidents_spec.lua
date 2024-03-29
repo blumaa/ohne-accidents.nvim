@@ -8,12 +8,17 @@ package.path = package.path .. ";" .. script_dir .. "../?.lua"
 local ohne_accidents = require 'ohne-accidents'
 
 describe('ohne-accidents', function()
+
+  before_each(function()
+    ohne_accidents.setConfig({ welcomeOnStartup = false })
+  end)
+
   local mock_vim = {
     fn = {
       expand = function() return "/home/user/.config/nvim" end,
       split = function() return { "file1.lua", "file2.lua" } end,
       glob = function() return "file1.lua\nfile2.lua" end,
-      getftime = function() return 1628000000 end, -- Mocked file modification time
+      getftime = function() return 1628000000 end,               -- Mocked file modification time
       floor = function(x) return math.floor(x) end,
       stdpath = function() return "/home/user/.config/nvim" end, -- Mocked stdpath function
     },
@@ -35,10 +40,13 @@ describe('ohne-accidents', function()
   end)
 
   it('displays welcome message', function()
+    -- Set the welcomeOnStartup configuration option to true
+    ohne_accidents.setConfig({ welcomeOnStartup = true })
+
     local spy = require('luassert.spy')
     local nvim_echo_spy = spy.on(vim.api, 'nvim_echo')
 
-    ohne_accidents.displayWelcomeMessage()
+    ohne_accidents.welcomeOnStartup()
 
     assert.spy(nvim_echo_spy).was.called_with(
       { { "╔════╗\n║  0 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
@@ -48,10 +56,13 @@ describe('ohne-accidents', function()
     -- Adjust os.time to return a value that is 33 days later than getftime
     os.time = function() return 1628000000 + 33 * 86400 end
 
+    -- Set the welcomeOnStartup configuration option to true
+    ohne_accidents.setConfig({ welcomeOnStartup = true })
+
     local spy = require('luassert.spy')
     local nvim_echo_spy = spy.on(vim.api, 'nvim_echo')
 
-    ohne_accidents.displayWelcomeMessage()
+    ohne_accidents.welcomeOnStartup()
 
     assert.spy(nvim_echo_spy).was.called_with(
       { { "╔════╗\n║ 33 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
@@ -70,5 +81,24 @@ describe('ohne-accidents', function()
       { { "╔════╗\n║ 33 ║ Days\n║  7 ║ Hours\n║ 46 ║ Minutes\n║ 40 ║ Seconds\n╚════╝ Without Editing the Configuration", "Title" } },
       true, {})
   end)
-end)
 
+  it('displays welcome message on startup', function()
+    -- Reset os.time to return the same value as getftime
+    os.time = function() return 1628000000 end
+
+    -- Set the welcomeOnStartup configuration option to true
+    ohne_accidents.setConfig({ welcomeOnStartup = true })
+
+    local spy = require('luassert.spy')
+    local nvim_echo_spy = spy.on(vim.api, 'nvim_echo')
+
+    ohne_accidents.welcomeOnStartup()
+
+    assert.spy(nvim_echo_spy).was.called_with(
+      { { "╔════╗\n║  0 ║ Days Without Editing the Configuration\n╚════╝", "Title" } }, true, {})
+  end)
+
+  it('welcomeOnStartup is false by default', function()
+    assert.is_false(ohne_accidents.config.welcomeOnStartup)
+  end)
+end)
