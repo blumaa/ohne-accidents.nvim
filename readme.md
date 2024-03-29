@@ -31,10 +31,10 @@ The welcome message is set to display by default when you start nvim. You can tu
 
 ![exampe of detailed display message](images/detailedDisplayMessage.png)
 
-When you open vim, only the days will appear in the welcome message. If you want a detailed display message, you can set your own keybidning for it like this:
+When you open vim, if you have not set the welcomeOnStartup message to false, only the days will appear in the welcome message. If you want a detailed display message, you can type `:OhneAccidents` or set your own keybidning for it like this:
 
 ```
-    vim.api.nvim_set_keymap('n', '<leader>oh', ':OhneAccidents status<CR>', {noremap = true, silent = true})
+    vim.api.nvim_set_keymap('n', '<leader>oh', ':OhneAccidents<CR>', {noremap = true, silent = true})
 
 ```
 
