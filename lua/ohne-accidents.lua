@@ -6,7 +6,6 @@ M.config = {
   welcomeOnStartup = true
 }
 
--- Function to set configuration options
 function M.setConfig(opts)
   for k, v in pairs(opts) do
     if M.config[k] ~= nil then
@@ -15,9 +14,8 @@ function M.setConfig(opts)
   end
 end
 
--- Function to calculate the time since last modification of any config file
+-- Calculates the time since last modification of any config file
 local function timeSinceLastChange()
-  -- local config_dir = vim.fn.expand("~/.config/nvim")
   local config_dir = vim.fn.stdpath("config")
   local files = vim.fn.split(vim.fn.glob(config_dir .. "/**/*.lua"), "\n")
 
@@ -38,7 +36,6 @@ local function timeSinceLastChange()
   return days, hours, minutes, seconds
 end
 
--- Function to display the message on the welcome screen
 function M.welcomeOnStartup()
   if not M.config.welcomeOnStartup then
     return
@@ -49,7 +46,6 @@ function M.welcomeOnStartup()
   vim.api.nvim_echo({ { message, "Title" } }, true, {})
 end
 
--- Function to display the detailed message
 function M.displayDetailedMessage()
   local days, hours, minutes, seconds = timeSinceLastChange()
   local message = string.format(
@@ -59,13 +55,6 @@ function M.displayDetailedMessage()
   vim.api.nvim_echo({ { message, "Title" } }, true, {})
 end
 
-function M.handleCommand(arg)
-  if arg == 'status' then
-    M.displayDetailedMessage()
-  end
-end
-
--- Initialization function
 function M.setup(opts)
   if opts then
     M.setConfig(opts)
