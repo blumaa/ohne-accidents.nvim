@@ -13,7 +13,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
     'blumaa/ohne-accidents',
     config = function()
       require("ohne-accidents").setup()
-      vim.api.nvim_set_keymap('n', '<leader>oh', ':OhneAccidents status<CR>', {noremap = true, silent = true})
+      vim.api.nvim_set_keymap('n', '<leader>oh', ':OhneAccidents<CR>', {noremap = true, silent = true})
     end
   },
 
