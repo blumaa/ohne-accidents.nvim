@@ -2,15 +2,29 @@
 
 local M = {}
 
+---@class OhneAccidentsConfig
+---@field welcomeOnStartup? boolean Choose whether to display the welcome message on startup.
+---@field api? "echo" | "notify" Choose whether to use `echo` or `vim.notify` to display the message.
 M.config = {
     welcomeOnStartup = true,
+    api = "echo",
 }
 
 function M.setConfig(opts)
-    for k, v in pairs(opts) do
-        if M.config[k] ~= nil then
-            M.config[k] = v
-        end
+    M.config = vim.tbl_deep_extend("force", M.config, opts)
+end
+
+function M.notify(message)
+    if M.config.api == "echo" then
+        vim.api.nvim_echo({ { message, "Title" } }, true, {})
+    end
+
+    if M.config.api == "notify" then
+        vim.api.nvim_notify(message, vim.log.levels.INFO, { title = " Ohne Accidents" })
+    end
+
+    if M.config.api ~= "echo" and M.config.api ~= "notify" then
+        error("Invalid notifyApi option")
     end
 end
 
@@ -46,7 +60,8 @@ function M.welcomeOnStartup()
         "╔════╗\n║ %2d ║ Days Without Editing the Configuration\n╚════╝",
         days
     )
-    vim.api.nvim_echo({ { message, "Title" } }, true, {})
+
+    M.notify(message)
 end
 
 function M.displayDetailedMessage()
@@ -58,7 +73,8 @@ function M.displayDetailedMessage()
         minutes,
         seconds
     )
-    vim.api.nvim_echo({ { message, "Title" } }, true, {})
+
+    M.notify(message)
 end
 
 function M.setup(opts)
