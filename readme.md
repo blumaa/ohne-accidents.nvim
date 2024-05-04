@@ -10,7 +10,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lazy
   {
-    'blumaa/ohne-accidents',
+    'blumaa/ohne-accidents.nvim',
     config = function()
       require("ohne-accidents").setup()
       vim.api.nvim_set_keymap('n', '<leader>oh', ':OhneAccidents<CR>', {noremap = true, silent = true})
@@ -42,7 +42,7 @@ Look at the installation example above to see where to put the keybinding.
 
 ### Alternatives
 
-- [ConfigPulse](https://github.com/mrquantumcodes/configpulse)
-- [NvimDaysWithout](https://github.com/idanarye/nvim-days-without)
+-   [ConfigPulse](https://github.com/mrquantumcodes/configpulse)
+-   [NvimDaysWithout](https://github.com/idanarye/nvim-days-without)
 
 Each of these works just a little bit differently than ohne-accidents. NvimDaysWithout uses git to calculate things. ConfigPulse uses the config folder but doesn't display a welcome message when you open nvim.
