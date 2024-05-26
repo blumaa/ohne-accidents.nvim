@@ -1,5 +1,3 @@
--- ohne-accidents.lua
-
 local M = {}
 
 ---@class OhneAccidentsConfig
