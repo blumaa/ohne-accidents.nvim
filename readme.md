@@ -41,10 +41,12 @@ This is the default configuration, and their description:
 ---@field welcomeOnStartup? boolean Choose whether to display the welcome message on startup.
 ---@field multiLine? boolean Choose wether the message should be displayed in a single line or multiple lines.
 ---@field api? "echo" | "notify" Choose whether to use `echo` or `vim.notify` to display the message.
+---@field useLastCommit? boolean Use the date of the last commit as the indicator for the time of last changes.
 M.config = {
     welcomeOnStartup = true,
     multiLine = true,
     api = "echo",
+    useLastCommit = false,
 }
 ```
 
@@ -104,7 +106,9 @@ Look at the installation example above to see where to put the keybinding.
 
 ### Alternatives
 
--   [ConfigPulse](https://github.com/mrquantumcodes/configpulse)
--   [NvimDaysWithout](https://github.com/idanarye/nvim-days-without)
+Each of these works just a little bit differently than ohne-accidents.
 
-Each of these works just a little bit differently than ohne-accidents. NvimDaysWithout uses git to calculate things. ConfigPulse uses the config folder but doesn't display a welcome message when you open nvim.
+-   [ConfigPulse](https://github.com/mrquantumcodes/configpulse)
+    -   ConfigPulse uses the config folder but doesn't display a welcome message when you open nvim.
+-   [NvimDaysWithout](https://github.com/idanarye/nvim-days-without)
+    -   NvimDaysWithout uses git to calculate things (But this plugin does also has an option for that `config.useLastCommit`).
