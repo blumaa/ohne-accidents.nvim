@@ -4,9 +4,11 @@ local M = {}
 
 ---@class OhneAccidentsConfig
 ---@field welcomeOnStartup? boolean Choose whether to display the welcome message on startup.
+---@field multiLine? boolean Choose wether the message should be displayed in a single line or multiple lines.
 ---@field api? "echo" | "notify" Choose whether to use `echo` or `vim.notify` to display the message.
 M.config = {
     welcomeOnStartup = true,
+    multiLine = true,
     api = "echo",
 }
 
@@ -56,25 +58,44 @@ function M.welcomeOnStartup()
     end
 
     local days = timeSinceLastChange()
-    local message = string.format(
-        "╔════╗\n║ %2d ║ Days Without Editing the Configuration\n╚════╝",
-        days
-    )
 
-    M.notify(message)
+    if M.config.multiLine then
+        local message = string.format(
+            "╔════╗\n║ %2d ║ Days Without Editing the Configuration\n╚════╝",
+            days
+        )
+        M.notify(message)
+    else
+        local message = string.format("%2d Days Without Editing the Configuration", days)
+
+        M.notify(message)
+    end
 end
 
 function M.displayDetailedMessage()
     local days, hours, minutes, seconds = timeSinceLastChange()
-    local message = string.format(
-        "╔════╗\n║ %2d ║ Days\n║ %2d ║ Hours\n║ %2d ║ Minutes\n║ %2d ║ Seconds\n╚════╝ Without Editing the Configuration",
-        days,
-        hours,
-        minutes,
-        seconds
-    )
 
-    M.notify(message)
+    if M.config.multiLine then
+        local message = string.format(
+            "╔════╗\n║ %2d ║ Days\n║ %2d ║ Hours\n║ %2d ║ Minutes\n║ %2d ║ Seconds\n╚════╝ Without Editing the Configuration",
+            days,
+            hours,
+            minutes,
+            seconds
+        )
+
+        M.notify(message)
+    else
+        local message = string.format(
+            "%2d Days, %2d Hours, %2d Minutes, %2d Seconds Without Editing the Configuration.",
+            days,
+            hours,
+            minutes,
+            seconds
+        )
+
+        M.notify(message)
+    end
 end
 
 function M.setup(opts)
