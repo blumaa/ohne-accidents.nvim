@@ -9,7 +9,7 @@ local ohne_accidents = require("ohne-accidents")
 
 describe("ohne-accidents", function()
     before_each(function()
-        ohne_accidents.setConfig({ welcomeOnStartup = false })
+        ohne_accidents.setConfig({ welcomeOnStartup = false, multiLine = true, api = "echo" })
     end)
 
     local mock_vim = {
@@ -35,6 +35,27 @@ describe("ohne-accidents", function()
         },
         api = {
             nvim_echo = function() end,
+            nvim_notify = function() end,
+        },
+        tbl_deep_extend = function(behavior, existing, updates)
+            -- This is a simple implementation of deep extend.
+            -- You might want to replace it with a more robust version if needed.
+            for k, v in pairs(updates) do
+                if type(v) == "table" then
+                    if not existing[k] then
+                        existing[k] = {}
+                    end
+                    vim.tbl_deep_extend(behavior, existing[k], v)
+                else
+                    existing[k] = v
+                end
+            end
+            return existing
+        end,
+        log = {
+            levels = {
+                INFO = 2,
+            },
         },
     }
 
@@ -135,5 +156,37 @@ describe("ohne-accidents", function()
 
     it("welcomeOnStartup is false by default", function()
         assert.is_false(ohne_accidents.config.welcomeOnStartup)
+    end)
+
+    it("displays welcome message in a single line", function()
+        -- Set the welcomeOnStartup and multiLine configuration options to true
+        ohne_accidents.setConfig({ welcomeOnStartup = true, multiLine = false })
+
+        local spy = require("luassert.spy")
+        local nvim_echo_spy = spy.on(vim.api, "nvim_echo")
+
+        ohne_accidents.welcomeOnStartup()
+
+        assert.spy(nvim_echo_spy).was.called_with(
+            { { " 0 Days Without Editing the Configuration", "Title" } },
+            true,
+            {}
+        )
+    end)
+
+    it("displays welcome message using notify API", function()
+        -- Set the welcomeOnStartup and api configuration options to true and "notify"
+        ohne_accidents.setConfig({ welcomeOnStartup = true, api = "notify" })
+
+        local spy = require("luassert.spy")
+        local nvim_notify_spy = spy.on(vim.api, "nvim_notify")
+
+        ohne_accidents.welcomeOnStartup()
+
+        assert.spy(nvim_notify_spy).was.called_with(
+            "╔════╗\n║  0 ║ Days Without Editing the Configuration\n╚════╝",
+            vim.log.levels.INFO,
+            { title = " Ohne Accidents" }
+        )
     end)
 end)
