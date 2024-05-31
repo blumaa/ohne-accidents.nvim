@@ -4,6 +4,7 @@ local M = {}
 ---@field welcomeOnStartup? boolean Choose whether to display the welcome message on startup.
 ---@field multiLine? boolean Choose wether the message should be displayed in a single line or multiple lines.
 ---@field api? "echo" | "notify" Choose whether to use `echo` or `vim.notify` to display the message.
+
 M.config = {
     welcomeOnStartup = true,
     multiLine = true,
